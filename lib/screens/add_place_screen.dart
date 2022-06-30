@@ -1,5 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:great_places_app/providers/places_provider.dart';
 import 'package:great_places_app/widgets/image_input.dart';
+
+import 'dart:io';
+
+import 'package:provider/provider.dart';
 
 class AddPlaceScreen extends StatefulWidget {
   static const routePath = '/add-place';
@@ -11,8 +18,8 @@ class AddPlaceScreen extends StatefulWidget {
 }
 
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
-
   final _titleController = TextEditingController();
+  File? _pickedImage;
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +42,14 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                       controller: _titleController,
                     ),
                     const SizedBox(height: 10,),
-                    const ImageInput(),
+                    ImageInput(onSelectImage: _selectImage),
                   ],
                 ),
               ),
             ),
           ),
           ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: _savePlace,
             icon: const Icon(Icons.add),
             label: const Text("Add Place"),
             style: ElevatedButton.styleFrom(
@@ -54,5 +61,16 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
         ],
       ),
     );
+  }
+
+  void _selectImage(File pickedImage) {
+    _pickedImage = pickedImage;
+  }
+
+  void _savePlace() {
+    if (_titleController.value.text.isNotEmpty && _pickedImage != null) {
+      Provider.of<PlacesProvider>(context, listen: false).addPlace(title: _titleController.value.text, image: _pickedImage!);
+      Navigator.of(context).pop();
+    }
   }
 }
