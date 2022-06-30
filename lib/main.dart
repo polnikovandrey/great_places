@@ -6,8 +6,6 @@ import 'package:provider/provider.dart';
 void main() => runApp(const GreatPlacesApp());
 
 class GreatPlacesApp extends StatelessWidget {
-  static const routePath = '/';
-
   const GreatPlacesApp({Key? key}) : super(key: key);
 
   @override
@@ -17,8 +15,9 @@ class GreatPlacesApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Great Places',
         theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo, secondary: Colors.amber)),
+        initialRoute: PlacesListScreen.routePath,
         routes: {
-          routePath: (_) => const PlacesListScreen(),
+          PlacesListScreen.routePath: (_) => const PlacesListScreen(),
         },
       ),
     );

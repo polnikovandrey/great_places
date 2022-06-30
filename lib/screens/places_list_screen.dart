@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PlacesListScreen extends StatelessWidget {
+  static const routePath = '/placesList';
   const PlacesListScreen({Key? key}) : super(key: key);
 
   @override
