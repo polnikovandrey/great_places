@@ -20,25 +20,30 @@ class PlacesListScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Consumer<PlacesProvider>(
-        builder: (context, placesProvider, child) {
-          return placesProvider.items.isEmpty
-              ? child!
-              : ListView.builder(
-                  itemCount: placesProvider.items.length,
-                  itemBuilder: (ctx, index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: FileImage(placesProvider.items[index].image),
-                      ),
-                      title: Text(placesProvider.items[index].title),
-                      onTap: () {},
-                    );
-                  });
-        },
-        child: const Center(
-          child: Text('Got no places yet, start adding some.'),
-        ),
+      body: FutureBuilder(
+        future: Provider.of<PlacesProvider>(context, listen: false).fetchAndSetPlaces(),
+        builder: (ctx, snapshot) => snapshot.connectionState == ConnectionState.waiting
+            ? const Center(child: CircularProgressIndicator())
+            : Consumer<PlacesProvider>(
+                builder: (context, placesProvider, child) {
+                  return placesProvider.items.isEmpty
+                      ? child!
+                      : ListView.builder(
+                          itemCount: placesProvider.items.length,
+                          itemBuilder: (ctx, index) {
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: FileImage(placesProvider.items[index].image),
+                              ),
+                              title: Text(placesProvider.items[index].title),
+                              onTap: () {},
+                            );
+                          });
+                },
+                child: const Center(
+                  child: Text('Got no places yet, start adding some.'),
+                ),
+              ),
       ),
     );
   }
