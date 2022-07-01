@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:great_places_app/helpers/location_helper.dart';
 import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
@@ -52,7 +53,9 @@ class _LocationInputState extends State<LocationInput> {
 
   Future<void> _getUserLocation() async {
     final locationData = await Location().getLocation();
-    print(locationData.latitude);
-    print(locationData.longitude);
+    if (locationData.latitude != null && locationData.longitude != null) {
+      final staticMapImageUrl = LocationHelper.generateLocationPreviewImage(latitude: locationData.latitude!, longitude: locationData.longitude!);
+      setState(() => _previewImageUrl = staticMapImageUrl);
+    }
   }
 }
