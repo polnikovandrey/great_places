@@ -48,4 +48,6 @@ class PlacesProvider with ChangeNotifier {
     );
     notifyListeners();
   }
+
+  Place findById(String id) => _items.firstWhere((element) => element.id == id);
 }
