@@ -6,7 +6,7 @@ class Place {
   final File _image;
   final Location? _location;
 
-  Place({required String id, required String title, required File image, Location? location})
+  const Place({required String id, required String title, required File image, Location? location})
       : _id = id,
         _title = title,
         _image = image,
@@ -26,8 +26,12 @@ class Location {
   final double _longitude;
   final String _address;
 
-  Location({required double latitude, required double longitude, String address = ''})
+  const Location({required double latitude, required double longitude, String address = ''})
       : _latitude = latitude,
         _longitude = longitude,
         _address = address;
+
+  double get latitude => _latitude;
+
+  double get longitude => _longitude;
 }
