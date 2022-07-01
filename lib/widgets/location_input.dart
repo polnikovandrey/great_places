@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({Key? key}) : super(key: key);
@@ -34,7 +35,7 @@ class _LocationInputState extends State<LocationInput> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton.icon(
-              onPressed: () {},
+              onPressed: _getUserLocation,
               icon: const Icon(Icons.location_on),
               label: const Text('Current Location'),
             ),
@@ -47,5 +48,11 @@ class _LocationInputState extends State<LocationInput> {
         ),
       ],
     );
+  }
+
+  Future<void> _getUserLocation() async {
+    final locationData = await Location().getLocation();
+    print(locationData.latitude);
+    print(locationData.longitude);
   }
 }
