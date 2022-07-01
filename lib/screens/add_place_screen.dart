@@ -1,12 +1,10 @@
-import 'dart:math';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:great_places_app/models/place.dart';
 import 'package:great_places_app/providers/places_provider.dart';
 import 'package:great_places_app/widgets/image_input.dart';
 import 'package:great_places_app/widgets/location_input.dart';
-
-import 'dart:io';
-
 import 'package:provider/provider.dart';
 
 class AddPlaceScreen extends StatefulWidget {
@@ -21,6 +19,7 @@ class AddPlaceScreen extends StatefulWidget {
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
   final _titleController = TextEditingController();
   File? _pickedImage;
+  Location? _pickedLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                     const SizedBox(height: 10,),
                     ImageInput(onSelectImage: _selectImage),
                     const SizedBox(height: 10),
-                    const LocationInput(),
+                    LocationInput(selectPlace: _selectPlace),
                   ],
                 ),
               ),
@@ -71,9 +70,13 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
   }
 
   void _savePlace() {
-    if (_titleController.value.text.isNotEmpty && _pickedImage != null) {
-      Provider.of<PlacesProvider>(context, listen: false).addPlace(title: _titleController.value.text, image: _pickedImage!);
+    if (_titleController.value.text.isNotEmpty && _pickedImage != null && _pickedLocation != null) {
+      Provider.of<PlacesProvider>(context, listen: false).addPlace(title: _titleController.value.text, image: _pickedImage!, location: _pickedLocation!);
       Navigator.of(context).pop();
     }
+  }
+
+  void _selectPlace({required double latitude, required double longitude}) {
+    _pickedLocation = Location(latitude: latitude, longitude: longitude);
   }
 }

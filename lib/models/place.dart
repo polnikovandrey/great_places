@@ -34,4 +34,6 @@ class Location {
   double get latitude => _latitude;
 
   double get longitude => _longitude;
+
+  String get address => _address;
 }

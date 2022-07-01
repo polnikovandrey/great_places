@@ -5,7 +5,11 @@ import 'package:great_places_app/screens/map_screen.dart';
 import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({Key? key}) : super(key: key);
+  final void Function({required double latitude, required double longitude}) _selectPlace;
+
+  const LocationInput({required void Function({required double latitude, required double longitude}) selectPlace, Key? key})
+      : _selectPlace = selectPlace,
+        super(key: key);
 
   @override
   State<LocationInput> createState() => _LocationInputState();
@@ -58,20 +62,29 @@ class _LocationInputState extends State<LocationInput> {
   }
 
   Future<void> _getUserLocation() async {
-    final locationData = await Location().getLocation();
-    if (locationData.latitude != null && locationData.longitude != null) {
-      final staticMapImageUrl = LocationHelper.generateLocationPreviewImage(latitude: locationData.latitude!, longitude: locationData.longitude!);
-      setState(() => _previewImageUrl = staticMapImageUrl);
+    try {
+      final locationData = await Location().getLocation();
+      if (locationData.latitude != null && locationData.longitude != null) {
+        _showPreview(latitude: locationData.latitude!, longitude: locationData.longitude!);
+        widget._selectPlace(latitude: locationData.latitude!, longitude: locationData.longitude!);
+      }
+    } catch(exception) {
+      return;
     }
   }
 
   Future<void> _selectOnMap() async {
     final selectedLocation = await Navigator.of(context).push<LatLng>(MaterialPageRoute(
-      fullscreenDialog: true,
       builder: (ctx) => const MapScreen(selecting: true),
     ));
     if (selectedLocation != null) {
-      print(selectedLocation.latitude);
+      _showPreview(latitude: selectedLocation.latitude, longitude: selectedLocation.longitude);
+      widget._selectPlace(latitude: selectedLocation.latitude, longitude: selectedLocation.longitude);
     }
+  }
+
+  void _showPreview({required double latitude, required double longitude}) {
+    final staticMapImageUrl = LocationHelper.generateLocationPreviewImage(latitude: latitude, longitude: longitude);
+    setState(() => _previewImageUrl = staticMapImageUrl);
   }
 }
